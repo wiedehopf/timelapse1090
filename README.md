@@ -1,8 +1,12 @@
-![Screenshot](https://raw.githubusercontent.com/wiedehopf/timelapse1090/screenshots/interface.png)
 
 # timelapse1090
-timelapse web interface for dump1090-fa (using the map interface from dump1090-fa as base)
 
+- timelapse web interface for dump1090-fa
+- does not interfere with the existing dump1090-fa installation
+- check out which plane flew by an hour or even 8 hours ago
+
+
+![Screenshot](https://raw.githubusercontent.com/wiedehopf/timelapse1090/screenshots/interface.png)
 
 ## Installation
 
