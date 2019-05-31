@@ -45,6 +45,10 @@ lighty-enable-mod timelapse1090 >/dev/null
 
 cp -r -T . $ipath
 
+if grep -q '^server.modules += ( "mod_setenv" )' /etc/lighttpd/conf-enabled/89-dump1090-fa.conf
+then
+	sed -i -e 's/^server.modules += ( "mod_setenv" )/#server.modules += ( "mod_setenv" )/' /etc/lighttpd/conf-available/89-skyview978.conf &>/dev/null
+fi
 
 systemctl daemon-reload
 systemctl enable timelapse1090 &>/dev/null
