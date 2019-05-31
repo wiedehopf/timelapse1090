@@ -414,7 +414,7 @@ function initialize() {
 var CurrentHistoryFetch = null;
 var HistoryItemsReturned = 0;
 function start_load_history() {
-	if (PositionHistorySize > 0 && window.location.hash != '#nohistory') {
+	if (PositionHistorySize > 0) {
 		if (HistoryChunks) {
 			PositionHistorySize = Math.ceil(PositionHistorySize/chunksize);
 			//PositionHistorySize = 100;
@@ -1809,6 +1809,7 @@ function onBackHour(e) {
 	var jump = 3600/histInterval;
 	bufferIndex -= jump;
 	index();
+	reaper(true);
 	window.clearTimeout(Refresh);
 	Refresh = window.setTimeout(fetchData, 50);
 }
@@ -1816,6 +1817,7 @@ function onJumpHour(e) {
 	var jump = 3600/histInterval;
 	bufferIndex += jump;
 	index();
+	reaper(true);
 	window.clearTimeout(Refresh);
 	Refresh = window.setTimeout(fetchData, 50);
 }
