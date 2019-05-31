@@ -27,3 +27,10 @@ Edit the configuration file to change the interval and total duration of history
 sudo nano /etc/default/timelapse1090
 ```
 Ctrl-x to exit, y (yes) and enter to save.
+
+Apply the configuration:
+```
+sudo systemctl restart timelapse1090
+```
+
+
