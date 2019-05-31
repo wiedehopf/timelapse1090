@@ -73,6 +73,8 @@ function index() {
 		bufferIndex = 0;
 		reaper(true);
 		console.log("Starting at the beginning");
+		window.clearTimeout(Refresh);
+		Refresh = window.setTimeout(fetchData, RefreshInterval);
 	}
 	return bufferIndex;
 }
