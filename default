@@ -1,7 +1,7 @@
 SOURCE=/run/dump1090-fa
 
 # snapshot interval in seconds
-INTERVAL=15
+INTERVAL=10
 
 # time saved in hours
 HISTORY=24
