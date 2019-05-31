@@ -1,0 +1,20 @@
+# timelapse1090 service for systemd
+
+[Unit]
+Description=timelapse1090 - timelapse webview for dump1090-fa
+Wants=network.target
+After=network.target
+
+[Service]
+User=dump1090
+RuntimeDirectory=timelapse1090
+RuntimeDirectoryMode=0755
+EnvironmentFile=/etc/default/timelapse1090
+ExecStart=-/usr/local/share/timelapse1090/timelapse1090.sh
+Type=simple
+Restart=always
+RestartSec=30
+Nice=15
+
+[Install]
+WantedBy=default.target
