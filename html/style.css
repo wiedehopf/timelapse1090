@@ -284,11 +284,9 @@ select.error, textarea.error, input.error {
 {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: bold;
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 16px;
     color: #FFFFFF;
-    color: rgb(255, 255, 255);
-    line-height: 23px;
+    line-height: 26px;
     text-align: right;
     display: inline-block;
     padding-right: 20px;
@@ -367,7 +365,7 @@ select.error, textarea.error, input.error {
 
 #header {
     width: 100%;
-    height: 23px;
+    height: 36px;
     background: #002F5D;
     background: -webkit-linear-gradient(#002F5D, #002F5D 60%, #021624);
     background: -moz-linear-gradient(#002F5D, #002F5D 60%, #021624);
@@ -410,17 +408,17 @@ select.error, textarea.error, input.error {
 
 .buttonContainer {
     margin-left: auto;
-    margin-top: 0px;
+    margin-top: 4px;
 }
 
 .buttonText
 {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 14px;
     color: #FFFFFF;
     color: rgb(255, 255, 255);
-    line-height: 23px;
+    line-height: 24px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -455,7 +453,7 @@ select.error, textarea.error, input.error {
 .settingsContainer {
     padding-right: 60px;
     padding-left: 2px;
-    margin-top: 0px;
+    margin-top: 6px;
     margin-left: auto;
     cursor: pointer;
 }
