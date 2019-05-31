@@ -1,3 +1,5 @@
+![Screenshot](https://raw.githubusercontent.com/wiedehopf/timelapse1090/screenshots/interface.png)
+
 # timelapse1090
 timelapse web interface for dump1090-fa (using the map interface from dump1090-fa as base)
 
