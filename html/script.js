@@ -69,7 +69,7 @@ var isFlightFeeder = false;
 function index() {
 	var length = PositionHistoryBuffer.length;
 	bufferIndex++;
-	if (bufferIndex >= length) {
+	if (bufferIndex >= length || bufferIndex < 0) {
 		bufferIndex = 0;
 		reaper(true);
 		console.log("Starting at the beginning");
@@ -153,10 +153,9 @@ function processReceiverUpdate(data) {
 }
 
 function fetchData() {
-	if (fetching) {
-		console.log("mooeeep");
+	if (fetching)
 		return;
-	}
+	window.clearTimeout(Refresh);
 	fetching = true;
 	console.log("fetchData: " + RefreshInterval);
 	if (fetchIteration++ % 10 == 0)
@@ -309,6 +308,9 @@ function initialize() {
 		}
 	});
 	$("#jump_hour").click(onJumpHour);
+	$("#back_hour").click(onBackHour);
+	$("#pb_faster").click(onPbFaster);
+	$("#pb_slower").click(onPbSlower);
 	// Set up playback speed button event handlers and validation options
 	$("#playback_speed_form").submit(onPlaybackSpeed);
 	$("#playback_speed_form").validate({
@@ -553,6 +555,8 @@ function end_load_history() {
 	refreshHighlighted();
 	reaper();
 
+	RefreshInterval = (histInterval/playbackSpeed)*1000;
+	histJump = (playbackSpeed/histInterval)/4;
 
 	// And kick off one refresh immediately.
 	fetchData();
@@ -1776,28 +1780,42 @@ function setAltitudeLegend(units) {
 		$('#altitude_chart_button').removeClass('altitudeMeters');
 	}
 }
-
-
-function onPlaybackSpeed(e) {
-	var tmp = parseFloat($("#playback_speed").val().trim());
-	e.preventDefault();
-	if (isNaN(tmp))
-		return;
-	playbackSpeed = tmp;
-	if (playbackSpeed < 0.1) playbackSpeed = 0.1;
-	if (playbackSpeed > 10000) playbackSpeed = 10000;
+function changeSpeed(speed) {
+	playbackSpeed = speed;
 	RefreshInterval = (histInterval/playbackSpeed)*1000;
 	histJump = (playbackSpeed/histInterval)/4;
 	window.clearTimeout(Refresh);
-	fetchData();
+	Refresh = window.setTimeout(fetchData, RefreshInterval);
+}
+
+function onPbFaster(e) {
+	changeSpeed(playbackSpeed*1.4285);
+}
+function onPbSlower(e) {
+	changeSpeed(playbackSpeed*0.7);
+}
+function onPlaybackSpeed(e) {
+	var speed = parseFloat($("#playback_speed").val().trim());
+	e.preventDefault();
+	if (isNaN(speed))
+		return;
+	if (speed < 0.1) speed = 0.1;
+	if (speed > 10000) speed = 10000;
+	changeSpeed(speed);
+}
+function onBackHour(e) {
+	var jump = 3600/histInterval;
+	bufferIndex -= jump;
+	index();
+	window.clearTimeout(Refresh);
+	Refresh = window.setTimeout(fetchData, 50);
 }
 function onJumpHour(e) {
 	var jump = 3600/histInterval;
-	for (var i=0; i < jump; i++)
-		index();
-	RefreshInterval = (histInterval/playbackSpeed)*1000;
+	bufferIndex += jump;
+	index();
 	window.clearTimeout(Refresh);
-	fetchData();
+	Refresh = window.setTimeout(fetchData, 50);
 }
 
 function onFilterByAltitude(e) {
