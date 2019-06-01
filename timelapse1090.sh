@@ -19,7 +19,11 @@ do
 	rm -f *.gz
 	rm -f *.json
 
-	cp $SOURCE/receiver.json $dir/receiver.json
+	if ! cp $SOURCE/receiver.json .
+	then
+		sleep 60
+		continue
+	fi
 	sed -i -e "s/refresh\" : [0-9]*/refresh\" : ${INTERVAL}000/" $dir/receiver.json
 	sed -i -e "s/history\" : [0-9]*/history\" : $hist/" $dir/receiver.json
 
