@@ -206,6 +206,8 @@
 						<div id="dump1090_controlblock">
 							<button id="pb_slower">Slower</button>
 							<button id="pb_faster">Faster</button>
+							<button id="pb_0">0x</button>
+							<button id="pb_1">1x</button>
 							<button id="pb_5">5x</button>
 							<button id="pb_10">10x</button>
 							<button id="pb_20">20x</button>
@@ -213,10 +215,17 @@
 						</div>
 						<div id="dump1090_controlblock">
 							<span>Jump:</span>
-							<button id="back_10">- 10min</button>
-							<button id="jump_10">+ 10min</button>
-							<button id="back_hour">- 1h</button>
-							<button id="jump_hour">+ 1h</button>
+							<button id="back_10">&lt; 10min</button>
+							<button id="jump_10">&gt; 10min</button>
+							<button id="back_hour">&lt;&lt; 1h</button>
+							<button id="jump_hour">&gt;&gt; 1h</button>
+						</div>
+						<div id="dump1090_controlblock">
+							<button id="jump_0">Start</button>
+							<button id="jump_25">25%</button>
+							<button id="jump_50">Middle</button>
+							<button id="jump_75">75%</button>
+							<button id="jump_98">End</button>
 						</div>
 						<form id="altitude_filter_form">
 							<label><span class="infoBlockTitleText">Filter by Altitude:</span></label>

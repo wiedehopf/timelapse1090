@@ -316,11 +316,18 @@ function initialize() {
 	$("#back_hour").click(function(){jump(-60)});
 	$("#jump_10").click(function(){jump(+10)});
 	$("#back_10").click(function(){jump(-10)});
+	$("#jump_0").click(function(){abs_jump(0)});
+	$("#jump_25").click(function(){abs_jump(0.25)});
+	$("#jump_50").click(function(){abs_jump(0.5)});
+	$("#jump_75").click(function(){abs_jump(0.75)});
+	$("#jump_98").click(function(){abs_jump(0.98)});
 	$("#pb_40").click(function(){changeSpeed(40)});
 	$("#pb_20").click(function(){changeSpeed(20)});
 	$("#pb_10").click(function(){changeSpeed(10)});
 	$("#pb_5").click(function(){changeSpeed(5)});
-	$("#pb_faster").click(function(){changeSpeed(playbackSpeed*1.25)});
+	$("#pb_1").click(function(){changeSpeed(1)});
+	$("#pb_0").click(function(){changeSpeed(0.0001)});
+	$("#pb_faster").click(function(){changeSpeed(playbackSpeed*1.25+0.1)});
 	$("#pb_slower").click(function(){changeSpeed(playbackSpeed*0.8)});
 	// Set up playback speed button event handlers and validation options
 	$("#playback_speed_form").submit(onPlaybackSpeed);
@@ -1796,6 +1803,7 @@ function changeSpeed(speed) {
 	RefreshInterval = (histInterval/playbackSpeed)*1000*Math.ceil(histJump);
 	window.clearTimeout(Refresh);
 	Refresh = window.setTimeout(fetchData, RefreshInterval/2);
+	console.log(RefreshInterval);
 }
 function jump(minutes) {
 	var jump = minutes*60/histInterval;
@@ -1803,6 +1811,13 @@ function jump(minutes) {
 	reaper(true);
 	window.clearTimeout(Refresh);
 	Refresh = window.setTimeout(fetchData, 50);
+}
+function abs_jump(rel) {
+	var length = PositionHistoryBuffer.length;
+	bufferIndex = Math.floor(rel*length);
+	reaper(true);
+	window.clearTimeout(Refresh);
+	Refresh = window.setTimeout(fetchData, 200);
 }
 
 function onPlaybackSpeed(e) {
