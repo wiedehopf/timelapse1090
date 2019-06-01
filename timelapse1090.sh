@@ -5,7 +5,7 @@ trap "kill -2 0" SIGTERM
 
 source default
 dir=/run/timelapse1090
-CS=100
+CS=250
 hist=$(($HISTORY*3600/$INTERVAL))
 chunks=$(($hist/$CS))
 

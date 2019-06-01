@@ -21,7 +21,7 @@ var PositionHistoryBuffer = [];
 var bufferIndex = 0;
 var playbackSpeed = 5;
 var HistoryChunks = true;
-var chunksize = 100;
+var chunksize = 250;
 var histInterval = 30;
 var fetchIteration = 0;
 var histJump = 0.1;
@@ -159,7 +159,8 @@ function fetchData() {
 		return;
 	window.clearTimeout(Refresh);
 	fetching = true;
-	console.log("fetchData: " + RefreshInterval);
+	var fetchStart = new Date();
+
 	if (fetchIteration++ % 10 == 0)
 		reaper();
 
@@ -185,9 +186,6 @@ function fetchData() {
 		plane.updateTick(now, LastReceiverTimestamp);
 	}
 
-	fetching = false;
-	window.clearTimeout(Refresh);
-	Refresh = window.setTimeout(fetchData, RefreshInterval);
 
 	selectNewPlanes();
 	refreshTableInfo();
@@ -196,6 +194,11 @@ function fetchData() {
 
 	LastReceiverTimestamp = now;
 
+	fetching = false;
+	window.clearTimeout(Refresh);
+	var timeout = Math.max(0, RefreshInterval-(new Date() - fetchStart));
+	//console.log("fetchData: " + timeout);
+	Refresh = window.setTimeout(fetchData, timeout);
 }
 
 function get_receiver() {
