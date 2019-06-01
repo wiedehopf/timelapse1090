@@ -11,6 +11,7 @@ function PlaneObject(icao) {
 
 	// Basic location information
 	this.altitude       = null;
+	this.lazy_alt       = null;
 	this.alt_baro       = null;
 	this.alt_geom       = null;
 
@@ -382,7 +383,7 @@ PlaneObject.prototype.getAltitudeColor = function(altitude) {
 	var h, s, l;
 
 	if (typeof altitude === 'undefined') {
-		altitude = this.altitude;
+		altitude = this.lazy_alt;
 	}
 
 	if (altitude === null) {
@@ -553,6 +554,10 @@ PlaneObject.prototype.updateData = function(receiver_timestamp, data) {
 		this.altitude = data.alt_geom;
 	} else {
 		this.altitude = null;
+	}
+	if ( (typeof this.altitude != typeof this.lazy_alt) ||
+		Math.abs(this.altitude - this.lazy_alt) >= 400 ) {
+		this.lazy_alt = this.altitude;
 	}
 
 	// Pick vertical rate from either baro or geom rate

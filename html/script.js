@@ -181,10 +181,12 @@ function fetchData() {
 	processReceiverUpdate(data);
 
 	// update timestamps, visibility, history track for all planes - not only those updated
+	//console.time("updateTick");
 	for (var i = 0; i < PlanesOrdered.length; ++i) {
 		var plane = PlanesOrdered[i];
 		plane.updateTick(now, LastReceiverTimestamp);
 	}
+	//console.timeEnd("updateTick");
 
 
 	selectNewPlanes();
@@ -500,9 +502,7 @@ function load_history_chunk(i) {
 			var strings = data.split("dirty_hack\n");
 			// will hopefully bring the sexy back!
 			for (var str in strings) {
-				var json = JSON.parse(strings[str]);
-				//if (!json.aircraft) console.log(str);
-				PositionHistoryBuffer.push(json);
+				PositionHistoryBuffer.push(JSON.parse(strings[str]));
 			}
 			//console.timeEnd("array_conv");
 
