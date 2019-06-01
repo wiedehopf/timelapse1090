@@ -24,9 +24,9 @@ do
 	j=0
 	while true
 	do
+		sleep $INTERVAL &
 		cd $dir
-		cp $SOURCE/aircraft.json .
-		cp aircraft.json history_$((i%$CS)).json
+		cp $SOURCE/aircraft.json history_$((i%$CS)).json
 
 
 		if [[ $((i%5)) == 0 ]]
@@ -41,7 +41,7 @@ do
 			j=$((j+1))
 			rm history*.json
 		fi
-		sleep $INTERVAL
+		wait
 	done
 	sleep 5
 done &
