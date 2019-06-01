@@ -2,8 +2,11 @@
 
 trap "kill 0" SIGINT
 trap "kill -2 0" SIGTERM
+SOURCE=/run/dump1090-fa
+INTERVAL=10
+HISTORY=12
+source /etc/default/timelapse1090
 
-source default
 dir=/run/timelapse1090
 CS=250
 hist=$(($HISTORY*3600/$INTERVAL))
