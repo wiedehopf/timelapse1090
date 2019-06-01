@@ -185,16 +185,16 @@ function fetchData() {
 		plane.updateTick(now, LastReceiverTimestamp);
 	}
 
+	fetching = false;
+	window.clearTimeout(Refresh);
+	Refresh = window.setTimeout(fetchData, RefreshInterval);
+
 	selectNewPlanes();
 	refreshTableInfo();
 	refreshSelected();
 	refreshHighlighted();
 
 	LastReceiverTimestamp = now;
-
-	fetching = false;
-	window.clearTimeout(Refresh);
-	Refresh = window.setTimeout(fetchData, RefreshInterval);
 
 }
 
@@ -309,10 +309,16 @@ function initialize() {
 			}
 		}
 	});
-	$("#jump_hour").click(onJumpHour);
-	$("#back_hour").click(onBackHour);
-	$("#pb_faster").click(onPbFaster);
-	$("#pb_slower").click(onPbSlower);
+	$("#jump_hour").click(function(){jump(+60)});
+	$("#back_hour").click(function(){jump(-60)});
+	$("#jump_10").click(function(){jump(+10)});
+	$("#back_10").click(function(){jump(-10)});
+	$("#pb_40").click(function(){changeSpeed(40)});
+	$("#pb_20").click(function(){changeSpeed(20)});
+	$("#pb_10").click(function(){changeSpeed(10)});
+	$("#pb_5").click(function(){changeSpeed(5)});
+	$("#pb_faster").click(function(){changeSpeed(playbackSpeed*1.25)});
+	$("#pb_slower").click(function(){changeSpeed(playbackSpeed*0.8)});
 	// Set up playback speed button event handlers and validation options
 	$("#playback_speed_form").submit(onPlaybackSpeed);
 	$("#playback_speed_form").validate({
@@ -417,7 +423,7 @@ function start_load_history() {
 	if (PositionHistorySize > 0) {
 		if (HistoryChunks) {
 			PositionHistorySize = Math.ceil(PositionHistorySize/chunksize);
-			//PositionHistorySize = 100;
+			PositionHistorySize = 20;
 			$("#loader_progress").attr('max',PositionHistorySize);
 			console.log("Starting to load history (" + PositionHistorySize + " items)");
 			console.time("Downloaded and parsed History");
@@ -558,7 +564,6 @@ function end_load_history() {
 	reaper();
 
 	RefreshInterval = (histInterval/playbackSpeed)*1000;
-	histJump = (playbackSpeed/histInterval)/4;
 
 	// And kick off one refresh immediately.
 	fetchData();
@@ -1784,18 +1789,20 @@ function setAltitudeLegend(units) {
 }
 function changeSpeed(speed) {
 	playbackSpeed = speed;
-	RefreshInterval = (histInterval/playbackSpeed)*1000;
-	histJump = (playbackSpeed/histInterval)/4;
+	histJump = (playbackSpeed/histInterval)/8;
+	RefreshInterval = (histInterval/playbackSpeed)*1000*Math.ceil(histJump);
 	window.clearTimeout(Refresh);
-	Refresh = window.setTimeout(fetchData, RefreshInterval);
+	Refresh = window.setTimeout(fetchData, RefreshInterval/2);
+}
+function jump(minutes) {
+	var jump = minutes*60/histInterval;
+	bufferIndex += jump;
+	index();
+	reaper(true);
+	window.clearTimeout(Refresh);
+	Refresh = window.setTimeout(fetchData, 50);
 }
 
-function onPbFaster(e) {
-	changeSpeed(playbackSpeed*1.4285);
-}
-function onPbSlower(e) {
-	changeSpeed(playbackSpeed*0.7);
-}
 function onPlaybackSpeed(e) {
 	var speed = parseFloat($("#playback_speed").val().trim());
 	e.preventDefault();
@@ -1804,22 +1811,6 @@ function onPlaybackSpeed(e) {
 	if (speed < 0.1) speed = 0.1;
 	if (speed > 10000) speed = 10000;
 	changeSpeed(speed);
-}
-function onBackHour(e) {
-	var jump = 3600/histInterval;
-	bufferIndex -= jump;
-	index();
-	reaper(true);
-	window.clearTimeout(Refresh);
-	Refresh = window.setTimeout(fetchData, 50);
-}
-function onJumpHour(e) {
-	var jump = 3600/histInterval;
-	bufferIndex += jump;
-	index();
-	reaper(true);
-	window.clearTimeout(Refresh);
-	Refresh = window.setTimeout(fetchData, 50);
 }
 
 function onFilterByAltitude(e) {

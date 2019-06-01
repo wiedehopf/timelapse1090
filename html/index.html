@@ -196,16 +196,28 @@
 										</tr>
 									</table>
 								</div> <!-- dump1090_infoblock -->
+								<div id="dump1090_controlblock">
 								<form id="playback_speed_form">
-									<label><span class="infoBlockTitleText">Adjust Playback Speed</span></label>
+									<label><span class="controlblockTitleText">Adjust Playback Speed</span></label>
 									<input id="playback_speed" name="Speed" type="text" class="altitudeFilterInput" maxlength="5">
 									<button type="submit">Adjust!</button>
 								</form>
+								</div>
+								<div id="dump1090_controlblock">
 								<button id="pb_slower">Slower</button>
 								<button id="pb_faster">Faster</button>
-								<button id="back_hour">Jump backward 1h</button>
-								<button id="jump_hour">Jump forward 1h</button>
-			
+								<button id="pb_5">5x</button>
+								<button id="pb_10">10x</button>
+								<button id="pb_20">20x</button>
+								<button id="pb_40">40x</button>
+								</div>
+								<div id="dump1090_controlblock">
+								<span>Jump:</span>
+								<button id="back_10">- 10min</button>
+								<button id="jump_10">+ 10min</button>
+								<button id="back_hour">- 1h</button>
+								<button id="jump_hour">+ 1h</button>
+								</div>
 								<form id="altitude_filter_form">
 									<label><span class="infoBlockTitleText">Filter by Altitude:</span></label>
 									<input id="altitude_filter_min" name="minAltitude" type="text" class="altitudeFilterInput" maxlength="5">

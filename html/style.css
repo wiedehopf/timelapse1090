@@ -561,6 +561,13 @@ select.error, textarea.error, input.error {
 #dump1090_infoblock {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+#dump1090_controlblock {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
 
 .infoBlockTitleText {
     font-weight: bold;
