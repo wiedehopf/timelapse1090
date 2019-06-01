@@ -424,6 +424,7 @@ select.error, textarea.error, input.error {
 }
 
 .button {
+    font-size: 14px;
     background: #00A0E2;
     background: rgba(0, 160, 226, 1);
     min-width: 80px;
@@ -432,10 +433,10 @@ select.error, textarea.error, input.error {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 15px;
     cursor: pointer;
     text-align: center;
-    margin-top: 0px;
+    margin-top: 2px;
 }
 
 .lightblue-link, .lightblue-link a {
@@ -563,10 +564,11 @@ select.error, textarea.error, input.error {
 }
 #dump1090_controlblock {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 2px;
-    padding-right: 2px;
+    font-size: 14px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
 .infoBlockTitleText {
