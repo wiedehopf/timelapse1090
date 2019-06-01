@@ -13,8 +13,8 @@ chunks=$(($hist/$CS))
 while true
 do
 	cd $dir
-	rm *.gz
-	rm *.json
+	rm -f *.gz
+	rm -f *.json
 
 	cp $SOURCE/receiver.json $dir/receiver.json
 	sed -i -e "s/refresh\" : [0-9]*/refresh\" : ${INTERVAL}000/" $dir/receiver.json
