@@ -423,7 +423,7 @@ function start_load_history() {
 	if (PositionHistorySize > 0) {
 		if (HistoryChunks) {
 			PositionHistorySize = Math.ceil(PositionHistorySize/chunksize);
-			PositionHistorySize = 20;
+			//PositionHistorySize = 20;
 			$("#loader_progress").attr('max',PositionHistorySize);
 			console.log("Starting to load history (" + PositionHistorySize + " items)");
 			console.time("Downloaded and parsed History");
