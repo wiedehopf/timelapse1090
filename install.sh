@@ -37,6 +37,9 @@ then
 	cd timelapse1090-master
 fi
 
+! diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh || ! diff timelapse1090.service /lib/systemd/system/timelapse1090.service
+changed=$?
+
 cp -n default /etc/default/timelapse1090
 cp timelapse1090.service /lib/systemd/system
 
@@ -52,8 +55,10 @@ fi
 
 systemctl daemon-reload
 systemctl enable timelapse1090 &>/dev/null
-systemctl restart timelapse1090 lighttpd
-
+systemctl restart lighttpd
+if [ 0 -eq $changed ]; then
+	systemctl restart timelapse1090
+fi
 
 
 echo --------------
