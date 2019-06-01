@@ -66,9 +66,9 @@ var layers;
 // piaware vs flightfeeder
 var isFlightFeeder = false;
 
-function index() {
+function index(inc) {
 	var length = PositionHistoryBuffer.length;
-	bufferIndex++;
+	bufferIndex+=inc;
 	if (bufferIndex >= length || bufferIndex < 0) {
 		bufferIndex = 0;
 		reaper(true);
@@ -163,12 +163,12 @@ function fetchData() {
 	if (fetchIteration++ % 10 == 0)
 		reaper();
 
-	var data;
-	for (var i=0; i<histJump; i++)
-		data = PositionHistoryBuffer[index()];
+	var data = PositionHistoryBuffer[index(Math.ceil(histJump))];
 
-	while (!data)
-		data = PositionHistoryBuffer[index()];
+	while (!data) {
+		console.log("no data?!!!");
+		data = PositionHistoryBuffer[index(1)];
+	}
 
 
 	now = data.now;
@@ -1796,8 +1796,7 @@ function changeSpeed(speed) {
 }
 function jump(minutes) {
 	var jump = minutes*60/histInterval;
-	bufferIndex += jump;
-	index();
+	index(jump);
 	reaper(true);
 	window.clearTimeout(Refresh);
 	Refresh = window.setTimeout(fetchData, 50);
