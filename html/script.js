@@ -435,7 +435,7 @@ function start_load_history() {
 	if (PositionHistorySize > 0) {
 		if (HistoryChunks) {
 			PositionHistorySize = Math.ceil(PositionHistorySize/chunksize);
-			//PositionHistorySize = 20;
+			//PositionHistorySize = 5;
 			$("#loader_progress").attr('max',PositionHistorySize);
 			console.log("Starting to load history (" + PositionHistorySize + " items)");
 			console.time("Downloaded and parsed History");
@@ -1226,12 +1226,14 @@ function refreshHighlighted() {
 	var mapExtent = getExtent(0, 0, mapCanvas.width(), mapCanvas.height());
 
 	var marker = highlighted.marker;
+	if (!marker)
+		return;
 	var markerCoordinates = highlighted.marker.getGeometry().getCoordinates();
 	var markerPosition = OLMap.getPixelFromCoordinate(markerCoordinates);
 
 	// Check for overlap
 	//FIXME TODO: figure out this/remove this check
-	if (isPointInsideExtent(markerPosition[0], markerPosition[1], infoBoxExtent) || true) {
+	if (true || isPointInsideExtent(markerPosition[0], markerPosition[1], infoBoxExtent)) {
 		// Array of possible new positions for info box
 		var candidatePositions = [];
 		candidatePositions.push( { x: 40, y: 80 } );
@@ -1527,7 +1529,7 @@ function selectAllPlanes() {
 		deselectAllPlanes();
 	} else {
 		// If SelectedPlane has something in it, clear out the selected
-		if (SelectedPlane != null) {
+		if (SelectedPlane != null && Planes[SelectedPlane]) {
 			Planes[SelectedPlane].selected = false;
 			Planes[SelectedPlane].clearLines();
 			Planes[SelectedPlane].updateMarker();
