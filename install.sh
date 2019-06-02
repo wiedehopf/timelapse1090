@@ -1,5 +1,6 @@
 #!/bin/bash
 
+repository="https://github.com/wiedehopf/timelapse1090/archive/master.zip"
 ipath=/usr/local/share/timelapse1090
 install=0
 
@@ -29,7 +30,7 @@ fi
 if [ -z $1 ] || [ $1 != "test" ]
 then
 	cd /tmp
-	if ! wget --timeout=30 -q -O master.zip https://github.com/wiedehopf/timelapse1090/archive/master.zip || ! unzip -q -o master.zip
+	if ! wget --timeout=30 -q -O master.zip $repository || ! unzip -q -o master.zip
 	then
 		echo "Unable to download files, exiting! (Maybe try again?)"
 		exit 1
@@ -37,7 +38,8 @@ then
 	cd timelapse1090-master
 fi
 
-! diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh || ! diff timelapse1090.service /lib/systemd/system/timelapse1090.service
+! diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh &>/dev/null \
+	|| ! diff timelapse1090.service /lib/systemd/system/timelapse1090.service &>/dev/null
 changed=$?
 
 cp -n default /etc/default/timelapse1090

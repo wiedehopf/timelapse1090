@@ -21,7 +21,7 @@ var PositionHistoryBuffer = [];
 var bufferIndex = 0;
 var playbackSpeed = 5;
 var HistoryChunks = true;
-var chunksize = 250;
+var chunksize = 360;
 var histInterval = 30;
 var fetchIteration = 0;
 var histJump = 0.1;
@@ -166,9 +166,10 @@ function fetchData() {
 
 	var data = PositionHistoryBuffer[index(Math.ceil(histJump))];
 
-	while (!data) {
+	if (!data) {
 		console.log("no data?!!!");
-		data = PositionHistoryBuffer[index(1)];
+		abs_jump(0);
+		return;
 	}
 
 
@@ -216,7 +217,7 @@ function initialize() {
 	// Set page basics
 	document.title = PageName;
 
-	flightFeederCheck();
+	// flightFeederCheck();
 
 	PlaneRowTemplate = document.getElementById("plane_row_template");
 
@@ -434,7 +435,6 @@ var HistoryItemsReturned = 0;
 function start_load_history() {
 	if (PositionHistorySize > 0) {
 		if (HistoryChunks) {
-			PositionHistorySize = Math.ceil(PositionHistorySize/chunksize);
 			//PositionHistorySize = 5;
 			$("#loader_progress").attr('max',PositionHistorySize);
 			console.log("Starting to load history (" + PositionHistorySize + " items)");
@@ -492,20 +492,17 @@ function load_history_chunk(i) {
 	$.ajax({ url: 'data/chunk_' + i + '.gz',
 		timeout: PositionHistorySize * 1000, // Allow 40 ms load time per history entry
 		//cache: false,
+		dataType: 'json'
 	})
 
 		.done(function(data) {
-			HistoryItemsReturned++;
 			$("#loader_progress").attr('value',HistoryItemsReturned);
 
-			//console.time("array_conv");
-			var strings = data.split("dirty_hack\n");
-			// will hopefully bring the sexy back!
-			for (var str in strings) {
-				PositionHistoryBuffer.push(JSON.parse(strings[str]));
+			for (var i in data.files) {
+				PositionHistoryBuffer.push(data.files[i]);
 			}
-			//console.timeEnd("array_conv");
 
+			HistoryItemsReturned++;
 			if (HistoryItemsReturned == PositionHistorySize) {
 				end_load_history();
 			}
@@ -513,7 +510,8 @@ function load_history_chunk(i) {
 
 		.fail(function(jqxhr, status, error) {
 			//Doesn't matter if it failed, we'll just be missing a data point
-			console.log(error);
+			$("#loader_progress").attr('value',HistoryItemsReturned);
+			//console.log(error);
 			HistoryItemsReturned++;
 			if (HistoryItemsReturned == PositionHistorySize) {
 				end_load_history();
@@ -523,6 +521,7 @@ function load_history_chunk(i) {
 
 function end_load_history() {
 	console.timeEnd("Downloaded and parsed History");
+	console.log("Snapshots loaded: " + PositionHistoryBuffer.length);
 	console.time("Processed Hisory");
 	$("#loader").addClass("hidden");
 
@@ -576,7 +575,10 @@ function end_load_history() {
 	RefreshInterval = (histInterval/playbackSpeed)*1000;
 
 	// And kick off one refresh immediately.
-	fetchData();
+	if (PositionHistoryBuffer.length > 0)
+		fetchData();
+	else
+		console.log("No data could be loaded!");
 
 }
 
