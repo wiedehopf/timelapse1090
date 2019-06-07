@@ -5,10 +5,24 @@ trap "kill -2 0" SIGTERM
 SOURCE=/run/dump1090-fa
 INTERVAL=10
 HISTORY=24
+CS=90
 source /etc/default/timelapse1090
 
+if [ $(($CHUNK_SIZE)) -lt 1 ]
+# default remains set if CHUNK_SIZE is not set in configuration file
+then true
+elif [ $(($CHUNK_SIZE)) -lt 10 ]
+# minimum allowed chunk size
+then
+	CS=10
+elif [ $(($CHUNK_SIZE)) -lt 10000 ]
+# if chunk size larger than this, use default
+then
+	CS=$CHUNK_SIZE
+fi
+
+
 dir=/run/timelapse1090
-CS=360
 hist=$(($HISTORY*3600/$INTERVAL))
 chunks=$(( 1 + ($hist/$CS) ))
 partial=$(($hist%$CS))

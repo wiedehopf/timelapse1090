@@ -5,3 +5,7 @@ INTERVAL=10
 
 # time saved in hours
 HISTORY=24
+
+# reducing this may increase website load time while reducing load on the RPi
+# default 90
+CHUNK_SIZE=90
