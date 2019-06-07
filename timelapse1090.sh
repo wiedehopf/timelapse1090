@@ -58,7 +58,7 @@ do
 		sed -i -e '$a,' history_$((i%$CS)).json
 
 
-		if [[ $((i%5)) == 3 ]]
+		if [[ $((i%13)) == 3 ]]
 		then
 			#sed -s '$adirty_hack' history_*.json | sed '$d' | gzip > temp.gz
 			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | gzip > temp.gz
