@@ -324,6 +324,7 @@ function initialize() {
 	$("#jump_50").click(function(){abs_jump(0.5)});
 	$("#jump_75").click(function(){abs_jump(0.75)});
 	$("#jump_98").click(function(){abs_jump(0.98)});
+	$("#pb_80").click(function(){changeSpeed(80)});
 	$("#pb_40").click(function(){changeSpeed(40)});
 	$("#pb_20").click(function(){changeSpeed(20)});
 	$("#pb_10").click(function(){changeSpeed(10)});
