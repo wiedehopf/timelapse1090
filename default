@@ -6,8 +6,8 @@ INTERVAL=10
 # time saved in hours
 HISTORY=24
 
-# reducing this may increase website load time slightly while reducing load on the RPi
+# reducing this may increase website load time while reducing load on the RPi
 # (load on the pi is rather small with the default setting,
 # just included this setting if someone really has no CPU to spare.)
-# default 90, minimum 10
-CHUNK_SIZE=90
+# default 360, minimum 10
+CHUNK_SIZE=360

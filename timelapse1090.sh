@@ -5,7 +5,7 @@ trap "kill -2 0" SIGTERM
 SOURCE=/run/dump1090-fa
 INTERVAL=10
 HISTORY=24
-CS=90
+CS=360
 source /etc/default/timelapse1090
 
 if [ $(($CHUNK_SIZE)) -lt 1 ]
