@@ -14,7 +14,7 @@ ExecStart=-/usr/local/share/timelapse1090/timelapse1090.sh
 Type=simple
 Restart=always
 RestartSec=30
-Nice=15
+Nice=19
 
 [Install]
 WantedBy=default.target
