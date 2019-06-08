@@ -60,8 +60,7 @@ do
 
 		if [[ $((i%13)) == 3 ]]
 		then
-			#sed -s '$adirty_hack' history_*.json | sed '$d' | gzip > temp.gz
-			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | gzip > temp.gz
+			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | gzip -1 > temp.gz
 			mv temp.gz chunk_$j.gz
 		fi
 
