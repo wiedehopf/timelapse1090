@@ -163,8 +163,6 @@ function fetchData() {
 	fetching = true;
 	var fetchStart = new Date();
 
-	if (fetchIteration++ % 10 == 0)
-		reaper();
 
 	var i = index(Math.ceil(histJump));
 	if (i < 0) {
@@ -202,11 +200,15 @@ function fetchData() {
 	}
 	//console.timeEnd("updateTick");
 
-
 	selectNewPlanes();
-	refreshTableInfo();
-	refreshSelected();
-	refreshHighlighted();
+
+	if (fetchIteration++ % 20 == 0) {
+		reaper();
+	} else {
+		refreshTableInfo();
+		refreshSelected();
+		refreshHighlighted();
+	}
 
 	LastReceiverTimestamp = now;
 

@@ -344,7 +344,7 @@ PlaneObject.prototype.getMarkerColor = function() {
 	l = colorArr[2];
 
 	// If we have not seen a recent position update, change color
-	if (this.seen_pos > 15) {
+	if (false && this.seen_pos > 45) {
 		h += ColorByAlt.stale.h;
 		s += ColorByAlt.stale.s;
 		l += ColorByAlt.stale.l;
@@ -458,6 +458,7 @@ PlaneObject.prototype.updateIcon = function() {
 			rotateWithView: (baseMarker.noRotate ? false : true)
 		});
 
+		icon.load();
 		this.markerIcon = icon;
 		this.markerStyle = new ol.style.Style({
 			image: this.markerIcon
@@ -587,8 +588,8 @@ PlaneObject.prototype.updateTick = function(receiver_timestamp, last_timestamp) 
 	this.seen = receiver_timestamp - this.last_message_time;
 	this.seen_pos = (this.last_position_time === null ? null : receiver_timestamp - this.last_position_time);
 
-	// If no packet in over 58 seconds, clear the plane.
-	if (this.seen > 58) {
+	// If no packet in over 78 seconds, clear the plane.
+	if (this.seen > 78) {
 		if (this.visible) {
 			//console.log("hiding " + this.icao);
 			this.clearMarker();
@@ -597,7 +598,7 @@ PlaneObject.prototype.updateTick = function(receiver_timestamp, last_timestamp) 
 				selectPlaneByHex(null,false);
 		}
 	} else {
-		if (this.position !== null && (this.selected || this.seen_pos < 60)) {
+		if (this.position !== null && (this.selected || this.seen_pos < 80)) {
 			this.visible = true;
 			if (this.updateTrack(receiver_timestamp, last_timestamp)) {
 				this.updateLines();
