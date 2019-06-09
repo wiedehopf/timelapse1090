@@ -75,7 +75,7 @@ function index(inc) {
 		reaper(true);
 		console.log("Starting at the beginning");
 		window.clearTimeout(Refresh);
-		Refresh = window.setTimeout(fetchData, 5000);
+		Refresh = window.setTimeout(fetchData, 3000);
 		return -1;
 	}
 	return bufferIndex;
@@ -183,7 +183,11 @@ function fetchData() {
 
 
 	now = data.now;
-	$('#clock_div').text(new Date(now * 1000).toLocaleString());
+	var now_date = new Date(now * 1000);
+	var hhmm = now_date.getHours().toString().padStart(2,'0') + ":" + now_date.getMinutes().toString().padStart(2,'0');
+	var hms = hhmm + ":" + now_date.getSeconds().toString().padStart(2,'0');
+	$('#clock_div').text(hms + " " + now_date.toDateString());
+	$('#time_div').text(hhmm);
 
 
 	last = (LastReceiverTimestamp == 0) ? now-1 : LastReceiverTimestamp;
@@ -1820,17 +1824,17 @@ function changeSpeed(speed) {
 	console.log(RefreshInterval);
 }
 function jump(minutes) {
+	window.clearTimeout(Refresh);
 	var jump = minutes*60/histInterval;
 	index(jump);
 	reaper(true);
-	window.clearTimeout(Refresh);
 	Refresh = window.setTimeout(fetchData, 50);
 }
 function abs_jump(rel) {
+	window.clearTimeout(Refresh);
 	var length = PositionHistoryBuffer.length;
 	bufferIndex = Math.floor(rel*length);
 	reaper(true);
-	window.clearTimeout(Refresh);
 	fetching = false;
 	Refresh = window.setTimeout(fetchData, 50);
 }
