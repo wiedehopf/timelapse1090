@@ -68,13 +68,15 @@ var isFlightFeeder = false;
 
 function index(inc) {
 	var length = PositionHistoryBuffer.length;
-	bufferIndex+=inc;
+	bufferIndex += inc;
+	bufferIndex = Math.floor(bufferIndex);
 	if (bufferIndex >= length || bufferIndex < 0) {
 		bufferIndex = 0;
 		reaper(true);
 		console.log("Starting at the beginning");
 		window.clearTimeout(Refresh);
-		Refresh = window.setTimeout(fetchData, RefreshInterval);
+		Refresh = window.setTimeout(fetchData, 5000);
+		return -1;
 	}
 	return bufferIndex;
 }
@@ -164,10 +166,17 @@ function fetchData() {
 	if (fetchIteration++ % 10 == 0)
 		reaper();
 
-	var data = PositionHistoryBuffer[index(Math.ceil(histJump))];
+	var i = index(Math.ceil(histJump));
+	if (i < 0) {
+		fetching = false;
+		return;
+	}
+
+	var data = PositionHistoryBuffer[i];
 
 	if (!data) {
 		console.log("no data?!!!");
+		fetching = false;
 		abs_jump(0);
 		return;
 	}
@@ -1822,7 +1831,8 @@ function abs_jump(rel) {
 	bufferIndex = Math.floor(rel*length);
 	reaper(true);
 	window.clearTimeout(Refresh);
-	Refresh = window.setTimeout(fetchData, 200);
+	fetching = false;
+	Refresh = window.setTimeout(fetchData, 50);
 }
 
 function onPlaybackSpeed(e) {
