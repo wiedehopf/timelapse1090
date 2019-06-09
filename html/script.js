@@ -193,12 +193,10 @@ function fetchData() {
 	processReceiverUpdate(data);
 
 	// update timestamps, visibility, history track for all planes - not only those updated
-	//console.time("updateTick");
 	for (var i = 0; i < PlanesOrdered.length; ++i) {
 		var plane = PlanesOrdered[i];
 		plane.updateTick(now, LastReceiverTimestamp);
 	}
-	//console.timeEnd("updateTick");
 
 	selectNewPlanes();
 
@@ -1577,11 +1575,13 @@ function selectNewPlanes() {
 	if (SelectedAllPlanes) {
 		for (var key in Planes) {
 			if (!Planes[key].visible || Planes[key].isFiltered()) {
-				Planes[key].selected = false;
-				Planes[key].clearLines();
-				Planes[key].updateMarker();
+				if (Planes[key].selected) {
+					Planes[key].selected = false;
+					Planes[key].clearLines();
+					Planes[key].updateMarker();
+				}
 			} else {
-				if (Planes[key].selected !== true) {
+				if (!Planes[key].selected) {
 					Planes[key].selected = true;
 					Planes[key].updateLines();
 					Planes[key].updateMarker();
