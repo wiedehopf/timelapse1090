@@ -54,7 +54,11 @@ do
 
 
 		cd $dir
-		cp $SOURCE/aircraft.json history_$((i%$CS)).json
+		if ! cp $SOURCE/aircraft.json history_$((i%$CS)).json &>/dev/null
+		then
+			sleep 0.05
+			cp $SOURCE/aircraft.json history_$((i%$CS)).json
+		fi
 		sed -i -e '$a,' history_$((i%$CS)).json
 
 
