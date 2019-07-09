@@ -5,7 +5,7 @@ trap "kill -2 0" SIGTERM
 SOURCE=/run/dump1090-fa
 INTERVAL=10
 HISTORY=24
-CS=360
+CS=240
 source /etc/default/timelapse1090
 
 if [ $(($CHUNK_SIZE)) -lt 1 ]
@@ -72,7 +72,7 @@ do
 
 		if [[ $i == $CS ]]
 		then
-			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | gzip > temp.gz
+			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | gzip -9 > temp.gz
 			mv temp.gz chunk_$j.gz
 			i=0
 			j=$((j+1))
@@ -80,7 +80,7 @@ do
 		fi
 		if [[ $j == $chunks ]] && [[ $i == $partial ]]
 		then
-			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json 2>/dev/null | gzip > temp.gz
+			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json 2>/dev/null | gzip -9 > temp.gz
 			mv temp.gz chunk_$j.gz 2>/dev/null
 			i=0
 			j=0
