@@ -20,6 +20,8 @@ Click the following URL and replace the IP address with address of your Raspberr
 
 http://192.168.x.yy/timelapse
 
+**Note: Website loading time can be up to a minute, if you want to reduce that you can reduce the duration saved or increase the interval of data points**
+
 ## Configuration (optional):
 
 Edit the configuration file to change the interval and total duration of history saved:
