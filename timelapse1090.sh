@@ -54,12 +54,15 @@ do
 
 
 		cd $dir
-		if ! cp $SOURCE/aircraft.json history_$((i%$CS)).json &>/dev/null
+
+		now=$(date +%s)
+
+		if ! cp $SOURCE/aircraft.json history_$now.json &>/dev/null
 		then
 			sleep 0.05
-			cp $SOURCE/aircraft.json history_$((i%$CS)).json
+			cp $SOURCE/aircraft.json history_$now.json
 		fi
-		sed -i -e '$a,' history_$((i%$CS)).json
+		sed -i -e '$a,' history_$now.json
 
 
 		if [[ $((i%13)) == 3 ]]
@@ -74,17 +77,19 @@ do
 		then
 			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | gzip -9 > temp.gz
 			mv temp.gz chunk_$j.gz
+			rm -f history*.json
 			i=0
 			j=$((j+1))
-			rm -f history*.json
 		fi
 		if [[ $j == $chunks ]] && [[ $i == $partial ]]
 		then
-			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json 2>/dev/null | gzip -9 > temp.gz
-			mv temp.gz chunk_$j.gz 2>/dev/null
+			if [[ $i != 0 ]]; then
+				sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json 2>/dev/null | gzip -9 > temp.gz
+				mv temp.gz chunk_$j.gz 2>/dev/null
+				rm -f history*.json
+			fi
 			i=0
 			j=0
-			rm -f history*.json
 		fi
 
 		wait
