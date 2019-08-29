@@ -39,7 +39,9 @@ then
 fi
 
 ! diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh &>/dev/null \
-	|| ! diff timelapse1090.service /lib/systemd/system/timelapse1090.service &>/dev/null
+	|| ! diff timelapse1090.service /lib/systemd/system/timelapse1090.service &>/dev/null \
+	|| ! diff 88-timelapse1090.conf /etc/lighttpd/conf-available/88-timelapse1090.conf &>/dev/null \
+	|| ! diff 88-timelapse1090.conf /etc/lighttpd/conf-enabled/88-timelapse1090.conf &>/dev/null
 changed=$?
 
 cp -n default /etc/default/timelapse1090
@@ -55,13 +57,15 @@ then
 	sed -i -e 's/^server.modules += ( "mod_setenv" )/#server.modules += ( "mod_setenv" )/'  $(find /etc/lighttpd/conf-available/* | grep -v dump1090-fa)
 fi
 
-systemctl daemon-reload
-systemctl enable timelapse1090 &>/dev/null
-systemctl restart lighttpd
 if [ 0 -eq $changed ]; then
+	systemctl daemon-reload
+	systemctl restart lighttpd
 	systemctl restart timelapse1090
+fi
+if ! systemctl is-enabled timelapse1090 &>/dev/null; then
+	systemctl enable timelapse1090 &>/dev/null
 fi
 
 
 echo --------------
-echo "All done!"
+echo "All done! Webinterface available at http://$(ip route | grep -m1 -o -P 'src \K[0-9,.]*')/timelapse"
