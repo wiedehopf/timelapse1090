@@ -4,7 +4,7 @@ repository="https://github.com/wiedehopf/timelapse1090/archive/master.zip"
 ipath=/usr/local/share/timelapse1090
 install=0
 
-packages="lighttpd unzip"
+packages="lighttpd unzip p7zip-full "
 
 for i in $packages
 do
