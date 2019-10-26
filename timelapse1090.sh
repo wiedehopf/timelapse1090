@@ -61,6 +61,7 @@ do
 			cp $SOURCE/aircraft.json history_$date.json
 		fi
 		if ! [ -f history_$date.json ]; then
+			sleep 30
 			continue
 		fi
 
