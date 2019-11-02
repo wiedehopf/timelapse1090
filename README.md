@@ -35,4 +35,8 @@ Apply the configuration:
 sudo systemctl restart timelapse1090
 ```
 
+## Deactivate / uninstall:
 
+```
+sudo systemctl disable --now timelapse1090
+```
