@@ -52,9 +52,23 @@ lighty-enable-mod timelapse1090 >/dev/null
 
 cp -r -T . $ipath
 
-if grep -q '^server.modules += ( "mod_setenv" )' /etc/lighttpd/conf-available/89-dump1090-fa.conf
+if [ -d /etc/lighttpd/conf-enabled/ ]
 then
-	sed -i -e 's/^server.modules += ( "mod_setenv" )/#server.modules += ( "mod_setenv" )/'  $(find /etc/lighttpd/conf-available/* | grep -v dump1090-fa)
+	while read -r FILE; do
+        if grep -qs '^server.modules += ( "mod_setenv" )' $FILE; then
+            changed=1
+        fi
+		sed -i -e 's/^server.modules += ( "mod_setenv" )/#server.modules += ( "mod_setenv" )/'  "$FILE"
+	done < <(find /etc/lighttpd/conf-enabled/* | grep -v dump1090-fa)
+
+    # add mod_setenv to lighttpd modules, check if it's one too much
+    echo 'server.modules += ( "mod_setenv" )' > /etc/lighttpd/conf-enabled/87-mod_setenv.conf
+    if lighttpd -tt -f /etc/lighttpd/lighttpd.conf 2>&1 | grep mod_setenv >/dev/null
+    then
+        rm /etc/lighttpd/conf-enabled/87-mod_setenv.conf
+    else
+        changed=1
+    fi
 fi
 
 if [ 0 -eq $changed ]; then
