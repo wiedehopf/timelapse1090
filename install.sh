@@ -38,10 +38,11 @@ then
 	cd timelapse1090-master
 fi
 
-! diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh &>/dev/null \
-	|| ! diff timelapse1090.service /lib/systemd/system/timelapse1090.service &>/dev/null \
-	|| ! diff 88-timelapse1090.conf /etc/lighttpd/conf-available/88-timelapse1090.conf &>/dev/null \
-	|| ! diff 88-timelapse1090.conf /etc/lighttpd/conf-enabled/88-timelapse1090.conf &>/dev/null
+changed=0
+ diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh &>/dev/null \
+	&&  diff timelapse1090.service /lib/systemd/system/timelapse1090.service &>/dev/null \
+	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-available/88-timelapse1090.conf &>/dev/null \
+	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-enabled/88-timelapse1090.conf &>/dev/null
 changed=$?
 
 cp -n default /etc/default/timelapse1090
@@ -55,25 +56,33 @@ cp -r -T . $ipath
 if [ -d /etc/lighttpd/conf-enabled/ ]
 then
 	while read -r FILE; do
-        if grep -qs '^server.modules += ( "mod_setenv" )' $FILE; then
-            changed=1
-        fi
 		sed -i -e 's/^server.modules += ( "mod_setenv" )/#server.modules += ( "mod_setenv" )/'  "$FILE"
-	done < <(find /etc/lighttpd/conf-enabled/* | grep -v dump1090-fa)
+	done < <(find /etc/lighttpd/conf-available/* | grep -v dump1090-fa)
 
     # add mod_setenv to lighttpd modules, check if it's one too much
-    echo 'server.modules += ( "mod_setenv" )' > /etc/lighttpd/conf-enabled/87-mod_setenv.conf
+    if [ -f /etc/lighttpd/conf-enabled/87-mod_setenv.conf ]; then
+        setenv_file="present"
+    fi
+    echo 'server.modules += ( "mod_setenv" )' > /etc/lighttpd/conf-available/87-mod_setenv.conf
+    ln -s -f /etc/lighttpd/conf-available/87-mod_setenv.conf /etc/lighttpd/conf-enabled/87-mod_setenv.conf
     if lighttpd -tt -f /etc/lighttpd/lighttpd.conf 2>&1 | grep mod_setenv >/dev/null
     then
         rm /etc/lighttpd/conf-enabled/87-mod_setenv.conf
+        if [[ "$setenv_file" == "present" ]]; then
+            changed=1
+        fi
     else
-        changed=1
+        if [[ "$setenv_file" != "present" ]]; then
+            changed=1
+        fi
     fi
 fi
 
-if [ 0 -eq $changed ]; then
+if [[ "$changed" != 0 ]]; then
+    echo "Restarting lighttpd"
 	systemctl daemon-reload
 	systemctl restart lighttpd
+    echo "Restarting timelapse1090"
 	systemctl restart timelapse1090
 fi
 if ! systemctl is-enabled timelapse1090 &>/dev/null; then
