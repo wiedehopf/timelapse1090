@@ -9,6 +9,7 @@ function createBaseLayers() {
         var world = [];
         var us = [];
 
+    /*
         world.push(new ol.layer.Tile({
                 source: new ol.source.OSM({
 
@@ -28,6 +29,18 @@ function createBaseLayers() {
                 title: 'OpenStreetMap',
                 type: 'base',
         }));
+        */
+
+    world.push(new ol.layer.Tile({
+        source: new ol.source.OSM({
+            "url" : "https://map.adsbexchange.com/mapproxy/tiles/1.0.0/osm/osm_grid/{z}/{x}/{y}.png",
+            "attributions" : 'Courtesy of ADS-B Exchange <a href="https://adsbexchange.com/">adsbexchange.com</a>'
+            + ' using data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+        }),
+        name: 'osm',
+        title: 'OSM by ADSBx',
+        type: 'base',
+    }));
 
         if (BingMapsAPIKey) {
                 world.push(new ol.layer.Tile({
