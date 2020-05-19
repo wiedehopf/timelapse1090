@@ -6,6 +6,11 @@ install=0
 
 packages="lighttpd unzip p7zip-full "
 
+if ! id -u timelapse1090 &>/dev/null
+then
+    adduser --system --home $ipath --no-create-home --quiet timelapse1090
+fi
+
 for i in $packages
 do
 	if ! dpkg -s $i 2>/dev/null | grep 'Status.*installed' &>/dev/null
