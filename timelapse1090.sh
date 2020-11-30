@@ -1,7 +1,5 @@
 #!/bin/bash
 
-trap "kill 0" SIGINT
-trap "kill -2 0" SIGTERM
 SOURCE=/run/dump1090-fa
 INTERVAL=10
 HISTORY=24
