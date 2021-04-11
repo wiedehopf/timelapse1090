@@ -39,8 +39,8 @@ do
 		sleep 60
 		continue
 	fi
-	sed -i -e "s/refresh\" : [0-9]*/refresh\" : ${INTERVAL}000/" $dir/receiver.json
-	sed -i -e "s/history\" : [0-9]*/history\" : $((chunks+1))/" $dir/receiver.json
+	sed -E -i -e "s/refresh\" *: *[0-9]+/refresh\": ${INTERVAL}000/" $dir/receiver.json
+	sed -E -i -e "s/history\" *: *[0-9]+/history\": $((chunks+1))/" $dir/receiver.json
 
 	i=0
 	j=0
