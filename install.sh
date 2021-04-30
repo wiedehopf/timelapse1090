@@ -4,7 +4,7 @@ repository="https://github.com/wiedehopf/timelapse1090/archive/master.zip"
 ipath=/usr/local/share/timelapse1090
 install=0
 
-packages="lighttpd unzip p7zip-full "
+packages="lighttpd unzip gzip "
 
 if ! id -u timelapse1090 &>/dev/null
 then

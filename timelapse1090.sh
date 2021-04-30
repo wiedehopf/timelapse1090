@@ -88,7 +88,7 @@ do
 
 		if [[ $i == $CS ]]
 		then
-			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | 7za a -si temp.gz >/dev/null
+			sed -e '1i{ "files" : [' -e '$a]}' -e '$d' history_*.json | gzip -6 > temp.gz
 			mv temp.gz chunk_$j.gz
 			echo "{ \"files\" : [ ] }" | gzip -1 > rec_temp.gz
 			mv rec_temp.gz chunk_$chunks.gz
