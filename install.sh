@@ -1,10 +1,15 @@
 #!/bin/bash
+set -e
+trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
+renice 10 $$
 
-repository="https://github.com/wiedehopf/timelapse1090/archive/master.zip"
+repository="https://github.com/wiedehopf/timelapse1090.git"
 ipath=/usr/local/share/timelapse1090
 install=0
 
-packages="lighttpd unzip gzip "
+mkdir -p "$ipath"
+
+packages="lighttpd gzip "
 
 if ! id -u timelapse1090 &>/dev/null
 then
@@ -31,29 +36,68 @@ then
 	fi
 fi
 
-if [ -z $1 ] || [ $1 != "test" ]
+function getGIT() {
+    # getGIT $REPO $BRANCH $TARGET-DIR
+    if [[ -z "$1" ]] || [[ -z "$2" ]] || [[ -z "$3" ]]; then
+        echo "getGIT wrong usage, check your script or tell the author!" 1>&2
+        return 1
+    fi
+    if ! cd "$3" &>/dev/null || ! git fetch --depth 1 origin "$2" || ! git reset --hard FETCH_HEAD; then
+        if ! rm -rf "$3" || ! git clone --depth 1 --single-branch --branch "$2" "$1" "$3"; then
+            return 1
+        fi
+    fi
+    return 0
+}
+if [[ "$1" != "test" ]]
 then
-	cd /tmp
-	if ! wget --timeout=30 -q -O master.zip $repository || ! unzip -q -o master.zip
-	then
-		echo "Unable to download files, exiting! (Maybe try again?)"
+    cd
+    if ! getGIT "$repository" "master" "$ipath/git" || ! cd "$ipath/git"; then
+        echo "Unable to download files, exiting! (Maybe try again?)"
 		exit 1
 	fi
-	cd timelapse1090-master
 fi
 
-changed=0
- diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh &>/dev/null \
-	&&  diff timelapse1090.service /lib/systemd/system/timelapse1090.service &>/dev/null \
-	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-available/88-timelapse1090.conf &>/dev/null \
-	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-enabled/88-timelapse1090.conf &>/dev/null
-changed=$?
+if [[ -f /run/dump1090-fa/aircraft.json ]] ; then
+    srcdir=/run/dump1090-fa
+elif [[ -f /run/readsb/aircraft.json ]]; then
+    srcdir=/run/readsb
+elif [[ -f /run/adsbexchange-feed/aircraft.json ]]; then
+    srcdir=/run/adsbexchange-feed
+elif [[ -f /run/dump1090/aircraft.json ]]; then
+    srcdir=/run/dump1090
+elif [[ -f /run/dump1090-mutability/aircraft.json ]]; then
+    srcdir=/run/dump1090-mutability
+elif [[ -f /run/skyaware978/aircraft.json ]]; then
+    srcdir=/run/skyaware978
+else
+    echo --------------
+    echo FATAL: could not find aircraft.json in any of the usual places!
+    echo "checked these: /run/readsb /run/dump1090-fa /run/dump1090 /run/dump1090-mutability /run/adsbexchange-feed /run/skyaware978"
+    echo --------------
+    exit 1
+fi
 
 cp -n default /etc/default/timelapse1090
+changed=0
+
+if ! grep -qs -e "SOURCE=${srcdir}" /etc/default/timelapse1090; then
+    changed=1
+    sed -i -e "s#SOURCE.*#SOURCE=${srcdir}#" /etc/default/timelapse1090
+fi
+
+if ! { diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh &>/dev/null \
+	&&  diff timelapse1090.service /lib/systemd/system/timelapse1090.service &>/dev/null \
+	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-available/88-timelapse1090.conf &>/dev/null \
+	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-enabled/88-timelapse1090.conf &>/dev/null; }
+then
+    chaned=1
+fi
+
 cp timelapse1090.service /lib/systemd/system
 
 cp 88-timelapse1090.conf /etc/lighttpd/conf-available
-lighty-enable-mod timelapse1090 >/dev/null
+lighty-enable-mod timelapse1090 >/dev/null || true
 
 cp -r -T . $ipath
 
