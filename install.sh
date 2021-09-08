@@ -91,7 +91,7 @@ if ! { diff timelapse1090.sh /usr/local/share/timelapse1090/timelapse1090.sh &>/
 	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-available/88-timelapse1090.conf &>/dev/null \
 	&&  diff 88-timelapse1090.conf /etc/lighttpd/conf-enabled/88-timelapse1090.conf &>/dev/null; }
 then
-    chaned=1
+    changed=1
 fi
 
 cp timelapse1090.service /lib/systemd/system
