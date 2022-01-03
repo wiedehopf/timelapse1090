@@ -9,7 +9,7 @@ install=0
 
 mkdir -p "$ipath"
 
-packages="lighttpd gzip "
+packages="lighttpd gzip git"
 
 if ! id -u timelapse1090 &>/dev/null
 then
